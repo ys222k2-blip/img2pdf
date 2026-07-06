@@ -166,7 +166,11 @@ function PDFMaker() {
 
   const generate = async () => {
     if (images.length === 0) return;
-    
+
+    // 사용자 제스처 컨텍스트가 살아있는 동기 시점에 창을 미리 열어둠.
+    // iOS Safari는 await 이후 window.open을 팝업 차단하기 때문.
+    const pdfWindow = window.open('', '_blank');
+
     try {
       setIsGenerating(true);
       setProgress(0);
@@ -178,9 +182,14 @@ function PDFMaker() {
       const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
 
-      window.open(url, '_blank');
+      if (pdfWindow) {
+        pdfWindow.location.href = url;
+      } else {
+        // 팝업이 차단된 경우 현재 창에서 열기
+        window.location.href = url;
+      }
 
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
       
       toast({
         title: "완료",
