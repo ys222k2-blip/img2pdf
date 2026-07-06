@@ -36,7 +36,8 @@ function PDFMaker() {
     customWidth: 768,
     customHeight: 1024,
     backgroundColor: '#ffffff',
-    orientation: 'portrait'
+    orientation: 'portrait',
+    margin: 20,
   });
   
   const [isDraggingOver, setIsDraggingOver] = useState(false);
@@ -187,14 +188,14 @@ function PDFMaker() {
       setTimeout(() => URL.revokeObjectURL(url), 100);
       
       toast({
-        title: "Success",
-        description: "PDF generated and downloaded successfully.",
+        title: "완료",
+        description: "PDF가 성공적으로 생성되어 다운로드됩니다.",
       });
     } catch (error) {
       console.error(error);
       toast({
-        title: "Error",
-        description: "An error occurred while generating the PDF.",
+        title: "오류",
+        description: "PDF 생성 중 문제가 발생했습니다.",
         variant: "destructive",
       });
     } finally {
@@ -211,9 +212,9 @@ function PDFMaker() {
         <div className="p-6 border-b border-sidebar-border">
           <div className="flex items-center gap-2 text-sidebar-foreground">
             <Layers className="h-5 w-5 text-primary" />
-            <h1 className="font-semibold tracking-tight text-lg">PDF Maker</h1>
+            <h1 className="font-semibold tracking-tight text-lg">PDF 만들기</h1>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Compile images into a neat PDF.</p>
+          <p className="text-xs text-muted-foreground mt-1">이미지를 모아 PDF로 변환합니다.</p>
         </div>
         
         <ScrollArea className="flex-1 p-6">
@@ -224,7 +225,7 @@ function PDFMaker() {
           {isGenerating ? (
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-medium">
-                <span>Generating PDF...</span>
+                <span>PDF 생성 중...</span>
                 <span>{Math.round(progress)}%</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -237,7 +238,7 @@ function PDFMaker() {
               disabled={images.length === 0}
             >
               <DownloadCloud className="mr-2 h-5 w-5" />
-              Generate PDF
+              PDF 생성
             </Button>
           )}
         </div>
@@ -263,8 +264,8 @@ function PDFMaker() {
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-primary/5 backdrop-blur-sm border-2 border-dashed border-primary m-4 rounded-2xl transition-all">
             <div className="flex flex-col items-center p-8 bg-background rounded-2xl shadow-xl animate-in zoom-in-95 duration-200">
               <UploadCloud className="h-12 w-12 text-primary mb-4" />
-              <p className="text-lg font-semibold text-foreground">Drop images here</p>
-              <p className="text-sm text-muted-foreground mt-1">Files will be added to your workspace</p>
+              <p className="text-lg font-semibold text-foreground">이미지를 여기에 놓으세요</p>
+              <p className="text-sm text-muted-foreground mt-1">파일이 목록에 추가됩니다</p>
             </div>
           </div>
         )}
@@ -275,13 +276,13 @@ function PDFMaker() {
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <ImageIcon className="h-8 w-8 text-primary" />
               </div>
-              <h2 className="text-xl font-semibold mb-2">Start compiling</h2>
+              <h2 className="text-xl font-semibold mb-2">시작하기</h2>
               <p className="text-sm text-muted-foreground mb-8">
-                Drag and drop your images here, or click to browse. Supported formats: JPG, PNG, WEBP, GIF.
+                이미지를 여기에 끌어다 놓거나 클릭하여 선택하세요. JPG, PNG, WEBP, GIF를 지원합니다.
               </p>
               <Button onClick={(e) => { e.stopPropagation(); triggerFileInput(); }} variant="secondary" className="hover-elevate">
                 <Plus className="mr-2 h-4 w-4" />
-                Select Images
+                이미지 선택
               </Button>
             </div>
           </div>
@@ -289,16 +290,16 @@ function PDFMaker() {
           <div className="flex-1 flex flex-col h-full">
             <div className="flex items-center justify-between p-4 px-6 border-b bg-background/80 backdrop-blur shrink-0">
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium">{images.length} {images.length === 1 ? 'image' : 'images'} added</span>
+                <span className="text-sm font-medium">이미지 {images.length}장</span>
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={triggerFileInput} className="hover-elevate">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add more
+                  추가
                 </Button>
                 <Button variant="ghost" size="sm" onClick={clearAll} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10">
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Clear all
+                  전체 삭제
                 </Button>
               </div>
             </div>

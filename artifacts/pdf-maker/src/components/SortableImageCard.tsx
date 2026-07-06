@@ -53,7 +53,7 @@ export function SortableImageCard({ item, index, total, onRemove, onMoveBack, on
       <button
         className="absolute right-2 top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-md transition-opacity hover:opacity-80 active:scale-95"
         onClick={(e) => { e.stopPropagation(); onRemove(item.id); }}
-        aria-label="Delete"
+        aria-label="삭제"
       >
         <X className="h-3 w-3" />
       </button>

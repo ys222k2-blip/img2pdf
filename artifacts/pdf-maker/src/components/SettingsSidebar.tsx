@@ -24,19 +24,19 @@ export function SettingsSidebar({ settings, onSettingsChange }: SettingsSidebarP
     <Card className="border-0 shadow-none bg-transparent">
       <CardHeader className="px-0 pt-0 pb-4">
         <CardTitle className="text-sm font-semibold flex items-center gap-2">
-          Page Setup
+          페이지 설정
         </CardTitle>
       </CardHeader>
       <CardContent className="px-0 flex flex-col gap-6">
-        
+
         <div className="space-y-3">
-          <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Size</Label>
-          <Select 
-            value={settings.pageSize} 
+          <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">크기</Label>
+          <Select
+            value={settings.pageSize}
             onValueChange={(v) => updateSetting('pageSize', v as PageSize)}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select page size" />
+              <SelectValue placeholder="페이지 크기 선택" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ipad">iPad (768 × 1024)</SelectItem>
@@ -44,7 +44,7 @@ export function SettingsSidebar({ settings, onSettingsChange }: SettingsSidebarP
               <SelectItem value="ipad-pro-13">iPad Pro 13" (1024 × 1366)</SelectItem>
               <SelectItem value="a4">A4 (595 × 842)</SelectItem>
               <SelectItem value="letter">Letter (612 × 792)</SelectItem>
-              <SelectItem value="custom">Custom Size</SelectItem>
+              <SelectItem value="custom">직접 입력</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -52,18 +52,18 @@ export function SettingsSidebar({ settings, onSettingsChange }: SettingsSidebarP
         {settings.pageSize === 'custom' && (
           <div className="grid grid-cols-2 gap-3 animate-in slide-in-from-top-2 fade-in duration-200">
             <div className="space-y-2">
-              <Label className="text-xs">Width (pt)</Label>
-              <Input 
-                type="number" 
-                value={settings.customWidth} 
+              <Label className="text-xs">너비 (pt)</Label>
+              <Input
+                type="number"
+                value={settings.customWidth}
                 onChange={(e) => updateSetting('customWidth', Number(e.target.value))}
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs">Height (pt)</Label>
-              <Input 
-                type="number" 
-                value={settings.customHeight} 
+              <Label className="text-xs">높이 (pt)</Label>
+              <Input
+                type="number"
+                value={settings.customHeight}
                 onChange={(e) => updateSetting('customHeight', Number(e.target.value))}
               />
             </div>
@@ -71,37 +71,55 @@ export function SettingsSidebar({ settings, onSettingsChange }: SettingsSidebarP
         )}
 
         <div className="space-y-3">
-          <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Orientation</Label>
-          <ToggleGroup 
-            type="single" 
-            value={settings.orientation} 
-            onValueChange={(v) => { if (v) updateSetting('orientation', v as Orientation) }}
+          <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">방향</Label>
+          <ToggleGroup
+            type="single"
+            value={settings.orientation}
+            onValueChange={(v) => { if (v) updateSetting('orientation', v as Orientation); }}
             className="justify-start"
           >
-            <ToggleGroupItem value="portrait" aria-label="Portrait" className="flex-1 border bg-background hover:bg-muted data-[state=on]:bg-primary/10 data-[state=on]:border-primary data-[state=on]:text-primary">
+            <ToggleGroupItem value="portrait" aria-label="세로" className="flex-1 border bg-background hover:bg-muted data-[state=on]:bg-primary/10 data-[state=on]:border-primary data-[state=on]:text-primary">
               <Square className="h-4 w-4 mr-2" />
-              Portrait
+              세로
             </ToggleGroupItem>
-            <ToggleGroupItem value="landscape" aria-label="Landscape" className="flex-1 border bg-background hover:bg-muted data-[state=on]:bg-primary/10 data-[state=on]:border-primary data-[state=on]:text-primary">
+            <ToggleGroupItem value="landscape" aria-label="가로" className="flex-1 border bg-background hover:bg-muted data-[state=on]:bg-primary/10 data-[state=on]:border-primary data-[state=on]:text-primary">
               <RectangleHorizontal className="h-4 w-4 mr-2" />
-              Landscape
+              가로
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
 
         <div className="space-y-3">
-          <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Background</Label>
+          <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">여백 (pt)</Label>
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              min={0}
+              max={200}
+              value={settings.margin}
+              onChange={(e) => updateSetting('margin', Math.max(0, Number(e.target.value)))}
+              className="h-10 flex-1"
+            />
+            <span className="text-xs text-muted-foreground whitespace-nowrap">pt</span>
+          </div>
+          <p className="text-[11px] text-muted-foreground leading-relaxed">
+            상하좌우 동일하게 적용됩니다.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">배경색</Label>
           <div className="flex items-center gap-3">
             <div className="relative h-10 w-10 overflow-hidden rounded-md border shadow-sm">
-              <input 
-                type="color" 
-                value={settings.backgroundColor} 
+              <input
+                type="color"
+                value={settings.backgroundColor}
                 onChange={(e) => updateSetting('backgroundColor', e.target.value)}
                 className="absolute -inset-2 h-14 w-14 cursor-pointer p-0 border-0"
               />
             </div>
-            <Input 
-              value={settings.backgroundColor} 
+            <Input
+              value={settings.backgroundColor}
               onChange={(e) => updateSetting('backgroundColor', e.target.value)}
               className="h-10 flex-1 uppercase text-xs font-mono"
             />

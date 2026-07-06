@@ -9,6 +9,7 @@ export type Settings = {
   customHeight: number;
   backgroundColor: string;
   orientation: Orientation;
+  margin: number;
 };
 
 export type ImageItem = {
@@ -88,25 +89,29 @@ export async function generatePDF(images: ImageItem[], settings: Settings, onPro
   const pageH = settings.orientation === 'portrait' ? baseH : baseW;
   
   const bgColor = hexToRgb(settings.backgroundColor) || { r: 1, g: 1, b: 1 };
-  
+  const m = Math.max(0, settings.margin ?? 0);
+  // Drawable area after applying uniform margin
+  const drawW = pageW - m * 2;
+  const drawH = pageH - m * 2;
+
   for (let i = 0; i < images.length; i++) {
     const item = images[i];
-    
+
     const arrayBuffer = await item.file.arrayBuffer();
-    
+
     let embeddedImage;
     if (item.file.type === 'image/jpeg' || item.file.type === 'image/jpg') {
       embeddedImage = await pdfDoc.embedJpg(arrayBuffer);
     } else if (item.file.type === 'image/png') {
       embeddedImage = await pdfDoc.embedPng(arrayBuffer);
     } else {
-      // WEBP, GIF or others -> fallback to canvas conversion
+      // WEBP, GIF or others -> lossless PNG via canvas (no quality loss)
       const pngBuffer = await fileToPngBuffer(item.file);
       embeddedImage = await pdfDoc.embedPng(pngBuffer);
     }
-    
+
     const page = pdfDoc.addPage([pageW, pageH]);
-    
+
     // Fill background
     page.drawRectangle({
       x: 0,
@@ -115,36 +120,32 @@ export async function generatePDF(images: ImageItem[], settings: Settings, onPro
       height: pageH,
       color: rgb(bgColor.r, bgColor.g, bgColor.b),
     });
-    
+
     const imgW = embeddedImage.width;
     const imgH = embeddedImage.height;
-    
+
     const imgRatio = imgW / imgH;
-    const pageRatio = pageW / pageH;
-    
+    const drawRatio = drawW / drawH;
+
     let scaledW, scaledH, x, y;
-    
-    if (imgRatio > pageRatio) {
-      // fit to width
-      scaledW = pageW;
-      scaledH = imgH * (pageW / imgW);
-      x = 0;
-      y = pageH - scaledH;
+
+    if (imgRatio > drawRatio) {
+      // wider than drawable area → fit width, top-align
+      scaledW = drawW;
+      scaledH = imgH * (drawW / imgW);
+      x = m;
+      // pdf-lib y=0 is bottom; top-align = place at top of drawable area
+      y = m + drawH - scaledH;
     } else {
-      // fit to height
-      scaledH = pageH;
-      scaledW = imgW * (pageH / imgH);
-      y = 0;
-      x = (pageW - scaledW) / 2;
+      // taller → fit height, center horizontally
+      scaledH = drawH;
+      scaledW = imgW * (drawH / imgH);
+      x = m + (drawW - scaledW) / 2;
+      y = m;
     }
-    
-    page.drawImage(embeddedImage, {
-      x,
-      y,
-      width: scaledW,
-      height: scaledH,
-    });
-    
+
+    page.drawImage(embeddedImage, { x, y, width: scaledW, height: scaledH });
+
     onProgress(i + 1, images.length);
   }
   
