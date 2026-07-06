@@ -134,6 +134,16 @@ function PDFMaker() {
     });
   }, []);
 
+  const moveImage = useCallback((id: string, direction: -1 | 1) => {
+    setImages(prev => {
+      const idx = prev.findIndex(i => i.id === id);
+      if (idx < 0) return prev;
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= prev.length) return prev;
+      return arrayMove(prev, idx, newIdx);
+    });
+  }, []);
+
   const clearAll = useCallback(() => {
     images.forEach(img => URL.revokeObjectURL(img.previewUrl));
     setImages([]);
@@ -309,7 +319,10 @@ function PDFMaker() {
                         key={item.id} 
                         item={item} 
                         index={index}
-                        onRemove={removeImage} 
+                        total={images.length}
+                        onRemove={removeImage}
+                        onMoveBack={(id) => moveImage(id, -1)}
+                        onMoveForward={(id) => moveImage(id, 1)}
                       />
                     ))}
                   </div>
