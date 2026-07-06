@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Image to PDF Maker"
+version = "1.0.0"
+id = "artifacts/pdf-maker"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22476
+
+[services.development]
+run = "pnpm --filter @workspace/pdf-maker run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/pdf-maker", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/pdf-maker/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22476"
+BASE_PATH = "/"
