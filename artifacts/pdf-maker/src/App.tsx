@@ -177,15 +177,10 @@ function PDFMaker() {
       
       const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Compiled_Images.pdf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+
+      window.open(url, '_blank');
+
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
       
       toast({
         title: "완료",
