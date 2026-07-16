@@ -37,7 +37,8 @@ function PDFMaker() {
     customHeight: 1024,
     backgroundColor: '#ffffff',
     orientation: 'portrait',
-    margin: 20,
+    marginV: 20,
+    marginH: 20,
   });
   
   const [isDraggingOver, setIsDraggingOver] = useState(false);

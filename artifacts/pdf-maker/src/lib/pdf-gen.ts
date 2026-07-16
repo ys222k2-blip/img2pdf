@@ -9,7 +9,8 @@ export type Settings = {
   customHeight: number;
   backgroundColor: string;
   orientation: Orientation;
-  margin: number;
+  marginV: number;
+  marginH: number;
 };
 
 export type ImageItem = {
@@ -89,10 +90,11 @@ export async function generatePDF(images: ImageItem[], settings: Settings, onPro
   const pageH = settings.orientation === 'portrait' ? baseH : baseW;
   
   const bgColor = hexToRgb(settings.backgroundColor) || { r: 1, g: 1, b: 1 };
-  const m = Math.max(0, settings.margin ?? 0);
-  // Drawable area after applying uniform margin
-  const drawW = pageW - m * 2;
-  const drawH = pageH - m * 2;
+  const mV = Math.max(0, settings.marginV ?? 0);
+  const mH = Math.max(0, settings.marginH ?? 0);
+  // Drawable area after applying margins
+  const drawW = pageW - mH * 2;
+  const drawH = pageH - mV * 2;
 
   for (let i = 0; i < images.length; i++) {
     const item = images[i];
@@ -133,15 +135,15 @@ export async function generatePDF(images: ImageItem[], settings: Settings, onPro
       // wider than drawable area → fit width, top-align
       scaledW = drawW;
       scaledH = imgH * (drawW / imgW);
-      x = m;
+      x = mH;
       // pdf-lib y=0 is bottom; top-align = place at top of drawable area
-      y = m + drawH - scaledH;
+      y = mV + drawH - scaledH;
     } else {
       // taller → fit height, center horizontally
       scaledH = drawH;
       scaledW = imgW * (drawH / imgH);
-      x = m + (drawW - scaledW) / 2;
-      y = m;
+      x = mH + (drawW - scaledW) / 2;
+      y = mV;
     }
 
     page.drawImage(embeddedImage, { x, y, width: scaledW, height: scaledH });

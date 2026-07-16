@@ -92,19 +92,29 @@ export function SettingsSidebar({ settings, onSettingsChange }: SettingsSidebarP
         <div className="space-y-3">
           <Label className="text-xs text-muted-foreground font-medium uppercase tracking-wider">여백 (pt)</Label>
           <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground w-10 shrink-0">상하</span>
             <Input
               type="number"
               min={0}
               max={200}
-              value={settings.margin}
-              onChange={(e) => updateSetting('margin', Math.max(0, Number(e.target.value)))}
+              value={settings.marginV}
+              onChange={(e) => updateSetting('marginV', Math.max(0, Number(e.target.value)))}
               className="h-10 flex-1"
             />
             <span className="text-xs text-muted-foreground whitespace-nowrap">pt</span>
           </div>
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
-            상하좌우 동일하게 적용됩니다.
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground w-10 shrink-0">좌우</span>
+            <Input
+              type="number"
+              min={0}
+              max={200}
+              value={settings.marginH}
+              onChange={(e) => updateSetting('marginH', Math.max(0, Number(e.target.value)))}
+              className="h-10 flex-1"
+            />
+            <span className="text-xs text-muted-foreground whitespace-nowrap">pt</span>
+          </div>
         </div>
 
         <div className="space-y-3">
