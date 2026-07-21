@@ -104,13 +104,25 @@ export function SettingsSidebar({ settings, onSettingsChange }: SettingsSidebarP
             <span className="text-xs text-muted-foreground whitespace-nowrap">pt</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground w-10 shrink-0">좌우</span>
+            <span className="text-xs text-muted-foreground w-10 shrink-0">왼쪽</span>
             <Input
               type="number"
               min={0}
               max={200}
-              value={settings.marginH}
-              onChange={(e) => updateSetting('marginH', Math.max(0, Number(e.target.value)))}
+              value={settings.marginL}
+              onChange={(e) => updateSetting('marginL', Math.max(0, Number(e.target.value)))}
+              className="h-10 flex-1"
+            />
+            <span className="text-xs text-muted-foreground whitespace-nowrap">pt</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground w-10 shrink-0">오른쪽</span>
+            <Input
+              type="number"
+              min={0}
+              max={200}
+              value={settings.marginR}
+              onChange={(e) => updateSetting('marginR', Math.max(0, Number(e.target.value)))}
               className="h-10 flex-1"
             />
             <span className="text-xs text-muted-foreground whitespace-nowrap">pt</span>
