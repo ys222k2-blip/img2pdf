@@ -152,6 +152,26 @@ function PDFMaker() {
     setImages([]);
   }, [images]);
 
+  const DEFAULT_SETTINGS: Settings = {
+    pageSize: 'ipad',
+    customWidth: 768,
+    customHeight: 1024,
+    backgroundColor: '#ffffff',
+    orientation: 'portrait',
+    marginV: 20,
+    marginL: 20,
+    marginR: 20,
+  };
+
+  const resetAll = useCallback(() => {
+    // Revoke all object URLs before clearing
+    imagesRef.current.forEach(img => URL.revokeObjectURL(img.previewUrl));
+    setImages([]);
+    setSettings(DEFAULT_SETTINGS);
+    setProgress(0);
+    setIsGenerating(false);
+  }, []);
+
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
@@ -216,10 +236,14 @@ function PDFMaker() {
       {/* Sidebar */}
       <aside className="w-full md:w-80 border-b md:border-b-0 md:border-r border-border bg-sidebar flex flex-col z-10 shrink-0">
         <div className="p-6 border-b border-sidebar-border">
-          <div className="flex items-center gap-2 text-sidebar-foreground">
+          <button
+            onClick={resetAll}
+            className="flex items-center gap-2 text-sidebar-foreground cursor-pointer hover:opacity-70 transition-opacity bg-transparent border-0 p-0 text-left"
+            title="처음으로 돌아가기"
+          >
             <Layers className="h-5 w-5 text-primary" />
             <h1 className="font-semibold tracking-tight text-lg">PDF 만들기</h1>
-          </div>
+          </button>
           <p className="text-xs text-muted-foreground mt-1">이미지를 모아 PDF로 변환합니다.</p>
         </div>
         
