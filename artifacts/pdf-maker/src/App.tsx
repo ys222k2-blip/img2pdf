@@ -39,7 +39,7 @@ function PDFMaker() {
     orientation: 'portrait',
     marginV: 20,
     marginL: 20,
-    marginR: 20,
+    marginR: 400,
   });
   
   const [isDraggingOver, setIsDraggingOver] = useState(false);
@@ -160,7 +160,7 @@ function PDFMaker() {
     orientation: 'portrait',
     marginV: 20,
     marginL: 20,
-    marginR: 20,
+    marginR: 400,
   };
 
   const resetAll = useCallback(() => {
